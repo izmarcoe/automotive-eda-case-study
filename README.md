@@ -12,7 +12,7 @@
 
 ## 📌 Executive Summary
 
-This repository contains a comprehensive **Exploratory Data Analysis (EDA)** and strategic product-planning study evaluating the historical `mtcars` dataset (1973–1974 *Motor Trend* automotive survey, $N = 32$).
+This repository contains a comprehensive **Exploratory Data Analysis (EDA)** and strategic product-planning study evaluating the historical `mtcars` dataset (1973–1974 *Motor Trend* automotive survey, N = 32).
 
 ### The Business Challenge
 An automotive manufacturer planning its next-generation passenger car line-up engaged our consultancy practice to analyze the fundamental relationships between vehicle design choices (weight, engine displacement, cylinder architecture, induction systems, gearing) and real-world outcomes (fuel economy and track acceleration), while assessing competitor market positioning across geographic regions (United States, Europe, Japan).
@@ -52,12 +52,12 @@ The 1973–1974 model years represent a seismic inflection point in automotive h
 
 1. **Mandate Platform Downsizing & Unibody Lightweighting:**
    * *Target:* Curb weight below **2,800 lbs**.
-   * *Rationale:* Weight is the single largest physical predictor of fuel consumption ($r = -0.868$). Reducing vehicle mass by 500 lbs yields an immediate ~2.7 MPG efficiency dividend, far exceeding gains achievable through isolated engine tuning.
+   * *Rationale:* Weight is the single largest physical predictor of fuel consumption (r = -0.868). Reducing vehicle mass by 500 lbs yields an immediate ~2.7 MPG efficiency dividend, far exceeding gains achievable through isolated engine tuning.
 2. **Shift Powertrain Strategy to Overhead-Cam / Multi-Valve 4- & 6-Cylinder Engines:**
-   * *Target:* Specific power output exceeding **0.75 hp per cubic inch** ($> 45\text{ hp/liter}$).
+   * *Target:* Specific power output exceeding **0.75 hp per cubic inch** (> 45 hp/liter).
    * *Rationale:* High volumetric efficiency and multi-valve cylinder heads eliminate the need for heavy, high-displacement combustion blocks, matching acceleration expectations while drastically cutting thermal and friction losses.
 3. **Deploy Multi-Speed Drivetrains with Tall Overdrive Highway Gearing:**
-   * *Target:* 4-speed or 5-speed transmissions with high final drive ratios ($\text{drat} < 3.2$).
+   * *Target:* 4-speed or 5-speed transmissions with high final drive ratios (drat < 3.2).
    * *Rationale:* Decouples low-gear launch acceleration from high-speed highway cruising, eliminating the historical trade-off between quarter-mile responsiveness and fuel economy.
 
 ---
@@ -69,19 +69,19 @@ The 1973–1974 model years represent a seismic inflection point in automotive h
 * **Brand & Origin Parsing:** Derived 18 distinct automotive marques and classified them into three core geographic theaters: **United States** (11 models, 34.4%), **Europe** (15 models, 46.9%), and **Japan** (6 models, 18.8%).
 * **Categorical Typing:** Converted numeric doubles (`cyl`, `vs`, `am`, `gear`, `carb`) into structured R factors with self-documenting level labels to prevent invalid continuous linear modeling assumptions.
 * **Domain Feature Engineering:**
-  * $\text{wt\_lbs} = \text{wt} \times 1,000$ (actual curb weight in pounds).
-  * $\text{GPM} = 100 / \text{mpg}$ (gallons per 100 miles, restoring mathematical consumption linearity).
-  * $\text{Power-to-Weight} = (\text{hp} / \text{wt\_lbs}) \times 100$ (gross horsepower per 100 lbs).
-  * $\text{Specific Output} = \text{hp} / \text{disp}$ (volumetric efficiency in horsepower per cubic inch).
+  * `wt_lbs = wt * 1,000` (actual curb weight in pounds).
+  * `GPM = 100 / mpg` (gallons per 100 miles, restoring mathematical consumption linearity).
+  * `Power-to-Weight = (hp / wt_lbs) * 100` (gross horsepower per 100 lbs).
+  * `Specific Output = hp / disp` (volumetric efficiency in horsepower per cubic inch).
 
 ---
 
 ### Phase 2: Exploratory Data Analysis & Hypotheses Testing
 
 #### 1. Fuel Efficiency Dynamics (Questions 1–4)
-* **Fleet Distribution:** Right-skewed ($\text{Skewness} = 0.61$), with a median of **19.2 MPG** and mean of **20.09 MPG**. The "typical car" archetype represents a 3,440 lb sedan with a 6-to-8 cylinder engine generating 123–175 hp.
+* **Fleet Distribution:** Right-skewed (Skewness = 0.61), with a median of **19.2 MPG** and mean of **20.09 MPG**. The "typical car" archetype represents a 3,440 lb sedan with a 6-to-8 cylinder engine generating 123–175 hp.
 * **Leaders & Laggards:** 
-  * *Efficiency Leaders:* Toyota Corolla (33.9 MPG), Fiat 128 (32.4 MPG), Lotus Europa (30.4 MPG), and Honda Civic (30.4 MPG)—all featuring sub-100 cu in engines and curb weights $< 2,200\text{ lbs}$.
+  * *Efficiency Leaders:* Toyota Corolla (33.9 MPG), Fiat 128 (32.4 MPG), Lotus Europa (30.4 MPG), and Honda Civic (30.4 MPG)—all featuring sub-100 cu in engines and curb weights < 2,200 lbs.
   * *Consumption Laggards:* Cadillac Fleetwood (10.4 MPG) and Lincoln Continental (10.4 MPG)—exceeding 5,200 lbs with 460–472 cu in V8 blocks.
 * **The "MPG Illusion":** Diminishing returns in raw MPG are resolved by evaluating GPM. Upgrading a 10 MPG vehicle to 15 MPG saves **3.33 gallons/100 mi**, whereas upgrading a 30 MPG vehicle to 35 MPG saves only **0.48 gallons/100 mi**.
 * **Residual Standouts:**
@@ -90,13 +90,13 @@ The 1973–1974 model years represent a seismic inflection point in automotive h
 
 #### 2. Performance and Design Dynamics (Questions 5–8)
 * **Power vs. Quickness Divergence:** Maserati Bora (335 hp) and Ford Pantera L (264 hp) lead both categories. However, high horsepower does not guarantee acceleration: the Cadillac Fleetwood (205 hp) and Lincoln Continental (215 hp) clock sluggish ~18.0s quarter-miles due to massive inertial mass.
-* **The Efficiency-Speed Pareto Frontier:** Sub-16-second performance cars averaged only 15.6 MPG. High-mileage cars ($>25\text{ MPG}$) required over 18.5 seconds to complete the quarter-mile.
+* **The Efficiency-Speed Pareto Frontier:** Sub-16-second performance cars averaged only 15.6 MPG. High-mileage cars (> 25 MPG) required over 18.5 seconds to complete the quarter-mile.
 * **The Sluggish Index:** Identified vehicles suffering from poor mileage without acceleration return: the *Valiant* (18.1 MPG, 20.22s qsec) and *Hornet 4 Drive* (21.4 MPG, 19.44s qsec).
 * **Multi-Dimensional Outliers (Mahalanobis Distance):** *Maserati Bora* (extreme horsepower outlier) and *Cadillac Fleetwood / Lincoln Continental* (extreme weight/displacement outliers).
 
 #### 3. Vehicle Segments & Drivetrain Architecture (Questions 9–12)
-* **Cylinder Groups:** 4-cylinders (26.7 MPG) vs 6-cylinders (19.7 MPG) vs 8-cylinders (15.1 MPG). Validated through One-Way ANOVA ($F = 39.7, p < 0.001$) and non-parametric Kruskal-Wallis ($H = 25.7, p < 0.001$).
-* **Simpson's Paradox in Transmission Efficiency:** Naive analysis shows manual transmissions outperforming automatics by **+7.24 MPG ($p = 0.001$)**. When controlling for curb weight via ANCOVA, the manual coefficient drops to **-0.024 MPG ($p = 0.988$)**, demonstrating that the effect was entirely an artifact of vehicle mass.
+* **Cylinder Groups:** 4-cylinders (26.7 MPG) vs 6-cylinders (19.7 MPG) vs 8-cylinders (15.1 MPG). Validated through One-Way ANOVA (F = 39.7, p < 0.001) and non-parametric Kruskal-Wallis (H = 25.7, p < 0.001).
+* **Simpson's Paradox in Transmission Efficiency:** Naive analysis shows manual transmissions outperforming automatics by **+7.24 MPG (p = 0.001)**. When controlling for curb weight via ANCOVA, the manual coefficient drops to **-0.024 MPG (p = 0.988)**, demonstrating that the effect was entirely an artifact of vehicle mass.
 * **Principal Component Analysis (PCA):**
   * *PC1 (60.0% Variance) — "Scale, Displacement & Fuel Thirst":* High positive loadings on `disp`, `wt`, `hp`; negative loading on `mpg`.
   * *PC2 (24.1% Variance) — "Track Acceleration & Gearing":* High positive loading on `qsec`; negative loadings on `drat` and `hp`.
@@ -108,8 +108,8 @@ The 1973–1974 model years represent a seismic inflection point in automotive h
 * **Europe:** 20.57 MPG average. Bifurcated across high-efficiency economy/diesel models and premium sports GTs.
 
 #### 5. Methodological Rigor, Diagnostics & Limitations (Questions 16–18)
-* **Multicollinearity Diagnostic:** Variance Inflation Factors exceed critical thresholds ($\text{VIF} = 10.7$ for `wt` and $11.2$ for `disp`), warning analysts against interpreting individual regression coefficients in isolation.
-* **Influential Leverage Points:** Evaluated Cook's Distance ($4/N = 0.125$ cutoff), identifying the *Maserati Bora* (horsepower leverage) and *Cadillac Fleetwood / Lincoln Continental* (mass leverage) as high-influence observations.
+* **Multicollinearity Diagnostic:** Variance Inflation Factors exceed critical thresholds (VIF = 10.7 for `wt` and 11.2 for `disp`), warning analysts against interpreting individual regression coefficients in isolation.
+* **Influential Leverage Points:** Evaluated Cook's Distance (4/N = 0.125 cutoff), identifying the *Maserati Bora* (horsepower leverage) and *Cadillac Fleetwood / Lincoln Continental* (mass leverage) as high-influence observations.
 * **Historical Caveat:** 1974 carburetor technology cannot be directly generalized to modern computer-controlled, turbocharged direct-injection drivetrains.
 
 #### 6. Additional Advanced Inquiries
@@ -166,7 +166,7 @@ source("scripts/00_setup_dependencies.R")
 
 ### 4. Render the Report
 To re-compile the report into HTML:
-* **In VS Code:** Press `Ctrl + Shift + P` $\rightarrow$ select **R: Knit to HTML**.
+* **In VS Code:** Press `Ctrl + Shift + P` → select **R: Knit to HTML**.
 * **In Terminal:** Run:
   ```bash
   Rscript scripts/render_report.R

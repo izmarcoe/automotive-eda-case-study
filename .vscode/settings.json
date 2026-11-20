@@ -1,0 +1,9 @@
+{
+  "r.rterm.windows": "R",
+  "r.bracketedPaste": true,
+  "r.plot.useHttpgd": false,
+  "files.associations": {
+    "*.Rmd": "rmd"
+  },
+  "editor.wordWrap": "on"
+}

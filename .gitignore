@@ -1,0 +1,32 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# Example: consider ignoring user-specific files in an R package
+.Renviron
+
+# RStudio files
+.Rproj.user/
+
+# knitr and R markdown cache
+*_cache/
+*_files/
+
+# VS Code directory (optional: ignore local user state)
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

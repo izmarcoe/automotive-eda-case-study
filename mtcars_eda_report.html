@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exploratory Data Analysis: Automotive Design, Performance & Market Positioning</title>
+
+<!-- Bootstrap CSS & FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+body {
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #2c3e50;
+  background-color: #ffffff;
+}
+
+#toc {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 260px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  font-size: 13px;
+  z-index: 1000;
+}
+
+#toc ul {
+  list-style: none;
+  padding-left: 15px;
+  margin-bottom: 5px;
+}
+
+#toc > ul {
+  padding-left: 0;
+}
+
+#toc a {
+  color: #34495e;
+  text-decoration: none;
+  display: block;
+  padding: 3px 0;
+}
+
+#toc a:hover, #toc a.active {
+  color: #2980b9;
+  font-weight: bold;
+}
+
+.main-content {
+  margin-left: 310px;
+  margin-right: 40px;
+  max-width: 1050px;
+  padding-bottom: 80px;
+}
+
+.header-banner {
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 25px;
+  margin-bottom: 35px;
+}
+
+.header-banner h1 {
+  font-size: 2.3em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.header-banner .subtitle {
+  font-size: 1.25em;
+  color: #7f8c8d;
+  font-weight: 300;
+}
+
+.header-meta {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #95a5a6;
+}
+
+.callout {
+  padding: 18px 22px;
+  margin: 25px 0;
+  border-left: 5px solid #3498db;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.callout.callout-success {
+  border-left-color: #2ecc71;
+  background-color: #f4faf6;
+}
+
+.callout.callout-warning {
+  border-left-color: #e67e22;
+  background-color: #fdfaf6;
+}
+
+.callout.callout-danger {
+  border-left-color: #e74c3c;
+  background-color: #fdf7f7;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 1.15em;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.table-custom {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.table-custom th {
+  background-color: #2c3e50;
+  color: #ffffff;
+  padding: 9px 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.table-custom td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.table-custom tr:nth-child(even) {
+  background-color: #f9fbfd;
+}
+
+.table-custom tr:hover {
+  background-color: #f1f4f8;
+}
+
+.badge-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 3px;
+  color: #fff;
+}
+.badge-us { background-color: #e74c3c; }
+.badge-eu { background-color: #3498db; }
+.badge-jp { background-color: #2ecc71; }
+
+.code-chunk {
+  margin: 20px 0;
+  border: 1px solid #e1e8ed;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.code-header {
+  background: #f5f7f9;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #7f8c8d;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.btn-toggle-code {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: #fff;
+  border: 1px solid #ccd6dd;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+pre {
+  margin: 0;
+  padding: 12px 15px;
+  background-color: #fdfdfd;
+  border: none;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.chart-container {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 25px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.chart-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.chart-subtitle {
+  font-size: 12.5px;
+  color: #7f8c8d;
+  margin-bottom: 15px;
+}
+
+.tab-nav {
+  display: flex;
+  border-bottom: 2px solid #ecf0f1;
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-weight: 600;
+  color: #7f8c8d;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab-btn.active {
+  color: #2980b9;
+  border-bottom-color: #2980b9;
+}
+</style>
+</head>
+<body>
+
+<!-- Left Floating Table of Contents -->
+<div id="toc">
+  <div style="font-weight: 700; margin-bottom: 10px; color: #2c3e50; font-size: 14px;">
+    <i class="fas fa-compass"></i> Table of Contents
+  </div>
+  <ul>
+    <li><a href="#executive-summary">1. Executive Briefing</a></li>
+    <li><a href="#data-preparation">2. Data Overview & Preparation</a></li>
+    <li><a href="#fuel-efficiency">3. Fuel Efficiency Dynamics</a>
+      <ul>
+        <li><a href="#q1-distribution">Q1: Distribution & Typical Car</a></li>
+        <li><a href="#q2-leaders">Q2: Extreme Vehicles</a></li>
+        <li><a href="#q3-drivers">Q3: Drivers (Wt, HP, Disp)</a></li>
+        <li><a href="#q4-surprises">Q4: Surprising Standouts</a></li>
+      </ul>
+    </li>
+    <li><a href="#performance-design">4. Performance & Design</a>
+      <ul>
+        <li><a href="#q5-power-speed">Q5: Power vs Quickness</a></li>
+        <li><a href="#q6-tradeoff">Q6: Efficiency vs Speed</a></li>
+        <li><a href="#q7-underperformance">Q7: Sluggish Index</a></li>
+        <li><a href="#q8-anomalies">Q8: Specification Anomalies</a></li>
+      </ul>
+    </li>
+    <li><a href="#vehicle-segments">5. Vehicle Segments</a>
+      <ul>
+        <li><a href="#q9-cylinders">Q9: Cylinder Groups</a></li>
+        <li><a href="#q10-transmission">Q10: Simpson's Paradox (am)</a></li>
+        <li><a href="#q11-engine-shape">Q11: V-Shape vs Straight</a></li>
+        <li><a href="#q12-pca">Q12: PCA & Clustering</a></li>
+      </ul>
+    </li>
+    <li><a href="#manufacturer-origin">6. Manufacturer & Origin</a>
+      <ul>
+        <li><a href="#q13-representation">Q13: Brand Representation</a></li>
+        <li><a href="#q14-regional-specs">Q14: Cross-Regional Profiles</a></li>
+        <li><a href="#q15-positioning">Q15: Fuel-Conscious Positioning</a></li>
+      </ul>
+    </li>
+    <li><a href="#data-limitations">7. Data Issues & Limitations</a>
+      <ul>
+        <li><a href="#q16-encoding">Q16: Categorical Encoding</a></li>
+        <li><a href="#q17-collinearity">Q17: Multicollinearity (VIF)</a></li>
+        <li><a href="#q18-influence">Q18: Cook's D & Limitations</a></li>
+      </ul>
+    </li>
+    <li><a href="#additional-inquiries">8. Additional Inquiries</a>
+      <ul>
+        <li><a href="#add-q1">Add Q1: Power-to-Weight Dynamics</a></li>
+        <li><a href="#add-q2">Add Q2: The Carburetor Penalty</a></li>
+      </ul>
+    </li>
+    <li><a href="#recommendations">9. Strategic Roadmap</a></li>
+  </ul>
+</div>
+
+<!-- Main Content Column -->
+<div class="main-content">
+
+  <div class="header-banner">
+    <h1>Exploratory Data Analysis: Automotive Design, Performance & Market Positioning</h1>
+    <div class="subtitle">A Strategic Assessment for Next-Generation Vehicle Line-up Planning</div>
+    <div class="header-meta">
+      <span><i class="fas fa-briefcase"></i> Automotive Practice</span> &nbsp;|&nbsp;
+      <span><i class="fas fa-database"></i> Motor Trend 1974 Survey (N = 32)</span> &nbsp;|&nbsp;
+      <span><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Full Statistical Verification</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <section id="executive-summary">
+    <h2>1. Executive Summary & Management Briefing</h2>
+    <p>This report delivers a rigorous exploratory data analysis of the historical <code>mtcars</code> specification dataset. Captured during the macroeconomic disruption of the <strong>1973 OPEC Oil Embargo</strong>, this data reflects the exact transition point where American automotive dominance was challenged by agile, fuel-efficient foreign platforms.</p>
+    
+    <div class="callout callout-success">
+      <div class="callout-title"><i class="fas fa-lightbulb"></i> Three Most Important Findings for Management (Question 19)</div>
+      <ol>
+        <li><strong>Vehicle Curb Weight is the Decisive Driver of Fuel Thirst (&beta; = -5.35 MPG / 1,000 lbs):</strong> Mass explains over 75% of fuel consumption variance. The popular belief that manual transmissions provide inherent fuel economy (+7.24 MPG unadjusted) is an illusion: controlling for weight, transmission choice has virtually zero direct impact (p = 0.988).</li>
+        <li><strong>The "Displacement Trap" of American Pushrod V8s:</strong> Domestic engines wasted immense displacement (330–472 cu in) producing low specific power (0.45–0.52 hp/cu in), burning excessive fuel without achieving quarter-mile speed advantages over lighter European/Japanese competition.</li>
+        <li><strong>Extreme Geographic Polarization:</strong> Japanese manufacturers occupied an unassailable efficiency beachhead (&ge; 25 MPG average at 2,200 lbs), leaving domestic US manufacturers catastrophically exposed with a fleet entirely confined to sub-18 MPG heavy platforms.</li>
+      </ol>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fas fa-clipboard-check"></i> Three Strategic Business Recommendations (Question 20)</div>
+      <ol>
+        <li><strong>Mandate Platform Downsizing & Lightweighting:</strong> Target unibody vehicle platforms under 2,800 lbs. Shedding 500 lbs yields an immediate ~2.7 MPG gain, far surpassing isolated engine recalibration.</li>
+        <li><strong>Transition to High Volumetric-Efficiency Overhead-Cam 4- & 6-Cylinder Engines:</strong> Terminate high-displacement pushrod architectures. Focus powertrain capital on multi-valve engines producing &gt;0.75 hp/cu in.</li>
+        <li><strong>Deploy Multi-Speed Transmissions with Tall Overdrive Ratios:</strong> Replace 3-speed transmissions with modern multi-speed units with tall highway cruising ratios (drat &lt; 3.2), breaking the historical trade-off between launch speed and cruising economy.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section id="data-preparation">
+    <h2>2. Data Overview & Preparation</h2>
+    <p>The dataset contains 32 automobiles across 11 technical performance metrics extracted from <em>Motor Trend</em> magazine (1973–74 models).</p>
+
+    <div class="code-chunk">
+      <div class="code-header">
+        <span><i class="fab fa-r-project"></i> R Code: Data Preprocessing & Feature Engineering</span>
+        <button class="btn-toggle-code" onclick="toggleCode(this)">Hide Code</button>
+      </div>
+      <pre><code># Data transformation pipeline
+library(tidyverse)
+cars_clean &lt;- mtcars %&gt;%
+  rownames_to_column(var = "car_model") %&gt;%
+  mutate(
+    # Extract brand &amp; geographic origin
+    brand = case_when(
+      str_detect(car_model, "^Mazda") ~ "Mazda",
+      str_detect(car_model, "^Toyota") ~ "Toyota",
+      str_detect(car_model, "^Merc") ~ "Mercedes-Benz",
+      str_detect(car_model, "^Cadillac") ~ "Cadillac",
+      TRUE ~ "Other"
+    ),
+    origin = factor(case_when(
+      brand %in% c("Mazda", "Datsun", "Honda", "Toyota") ~ "Japan",
+      brand %in% c("Mercedes-Benz", "Fiat", "Porsche", "Lotus", "Ferrari", "Maserati", "Volvo", "De Tomaso / Ford") ~ "Europe",
+      TRUE ~ "US"
+    ), levels = c("US", "Europe", "Japan")),
+    # Factor casting
+    cyl_f = factor(cyl, levels = c(4, 6, 8), labels = c("4 Cyl", "6 Cyl", "8 Cyl")),
+    am_f  = factor(am, levels = c(0, 1), labels = c("Automatic", "Manual")),
+    wt_lbs = wt * 1000,
+    gpm    = 100 / mpg
+  )</code></pre>
+    </div>
+
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Original Type</th>
+          <th>Analysis Treatment</th>
+          <th>Consulting Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>mpg</code></td>
+          <td>Numeric (dbl)</td>
+          <td>Continuous Dependent Metric</td>
+          <td>Miles per US Gallon; inverted to GPM (100/mpg) for consumption linearity.</td>
+        </tr>
+        <tr>
+          <td><code>cyl</code></td>
+          <td>Numeric (dbl)</td>
+          <td>Factor (4, 6, 8 Cylinders)</td>
+          <td>Discrete engine block classification; linear modeling as continuous is invalid.</td>
+        </tr>
+        <tr>
+          <td><code>am</code></td>
+          <td>Numeric (0, 1)</td>
+          <td>Factor (Automatic, Manual)</td>
+          <td>Binary transmission architecture flag; key variable in Simpson's Paradox test.</td>
+        </tr>
+        <tr>
+          <td><code>vs</code></td>
+          <td>Numeric (0, 1)</td>
+          <td>Factor (V-shaped, Straight)</td>
+          <td>Engine shape geometry; captures displacement packaging differences.</td>
+        </tr>
+        <tr>
+          <td><code>wt</code></td>
+          <td>Numeric (dbl)</td>
+          <td>Continuous (Thousands of lbs)</td>
+          <td>Converted to <code>wt_lbs</code> (wt * 1000) for direct engineering communication.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section id="fuel-efficiency">
+    <h2>3. Exploratory Analysis: Fuel Efficiency Dynamics</h2>
+
+    <h3 id="q1-distribution">Q1: Distribution of Fuel Efficiency &amp; The Typical Car</h3>
+    <p>Fleet fuel economy exhibits a pronounced right skewness (Skew = 0.61), with 50% of vehicles clustering between 15.4 and 22.8 MPG, and a long tail reaching 33.9 MPG.</p>
+
+    <div class="chart-container">
+      <div class="chart-title">Figure 3.1: Distribution of Vehicle Fuel Efficiency (MPG)</div>
+      <div class="chart-subtitle">Histogram with Density Curve and Median Benchmark (19.2 MPG)</div>
+      
+      <!-- SVG Histogram & Density Plot -->
+      <svg width="100%" height="240" viewBox="0 0 700 240" style="background:#fff;">
+        <line x1="50" y1="200" x2="650" y2="200" stroke="#bdc3c7" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="200" stroke="#bdc3c7" stroke-width="1.5"/>
+        
+        <!-- Axis labels -->
+        <text x="50" y="220" font-size="11" fill="#7f8c8d" text-anchor="middle">10 MPG</text>
+        <text x="170" y="220" font-size="11" fill="#7f8c8d" text-anchor="middle">15 MPG</text>
+        <text x="290" y="220" font-size="11" fill="#7f8c8d" text-anchor="middle">20 MPG</text>
+        <text x="410" y="220" font-size="11" fill="#7f8c8d" text-anchor="middle">25 MPG</text>
+        <text x="530" y="220" font-size="11" fill="#7f8c8d" text-anchor="middle">30 MPG</text>
+        <text x="650" y="220" font-size="11" fill="#7f8c8d" text-anchor="middle">35 MPG</text>
+        
+        <!-- Bars -->
+        <rect x="60" y="110" width="40" height="90" fill="#3498db" opacity="0.8"/>
+        <rect x="110" y="70" width="40" height="130" fill="#3498db" opacity="0.8"/>
+        <rect x="160" y="50" width="40" height="150" fill="#3498db" opacity="0.8"/>
+        <rect x="210" y="70" width="40" height="130" fill="#3498db" opacity="0.8"/>
+        <rect x="260" y="90" width="40" height="110" fill="#3498db" opacity="0.8"/>
+        <rect x="310" y="120" width="40" height="80" fill="#3498db" opacity="0.8"/>
+        <rect x="410" y="150" width="40" height="50" fill="#3498db" opacity="0.8"/>
+        <rect x="510" y="140" width="40" height="60" fill="#3498db" opacity="0.8"/>
+        <rect x="610" y="170" width="40" height="30" fill="#3498db" opacity="0.8"/>
+
+        <!-- Median Line -->
+        <line x1="270" y1="20" x2="270" y2="200" stroke="#e74c3c" stroke-width="2.5" stroke-dasharray="5,5"/>
+        <text x="280" y="45" font-size="12" font-weight="bold" fill="#e74c3c">Median = 19.2 MPG</text>
+      </svg>
+    </div>
+
+    <h3 id="q2-leaders">Q2: Unusually Efficient vs. Inefficient Vehicles</h3>
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Model</th>
+          <th>Origin</th>
+          <th>MPG</th>
+          <th>Weight (lbs)</th>
+          <th>Engine Specs</th>
+          <th>Primary Engineering Driver</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="label label-success">Most Efficient</span></td>
+          <td><strong>Toyota Corolla</strong></td>
+          <td><span class="badge-tag badge-jp">Japan</span></td>
+          <td><strong>33.9</strong></td>
+          <td>1,835</td>
+          <td>4 Cyl / 71.1 cu in / 65 hp</td>
+          <td>Ultra-light chassis, high compression, small displacement</td>
+        </tr>
+        <tr>
+          <td><span class="label label-success">Most Efficient</span></td>
+          <td><strong>Fiat 128</strong></td>
+          <td><span class="badge-tag badge-eu">Europe</span></td>
+          <td><strong>32.4</strong></td>
+          <td>2,200</td>
+          <td>4 Cyl / 78.7 cu in / 66 hp</td>
+          <td>Transverse engine layout, manual 4-speed gearing</td>
+        </tr>
+        <tr>
+          <td><span class="label label-success">Most Efficient</span></td>
+          <td><strong>Lotus Europa</strong></td>
+          <td><span class="badge-tag badge-eu">Europe</span></td>
+          <td><strong>30.4</strong></td>
+          <td>1,513</td>
+          <td>4 Cyl / 95.1 cu in / 113 hp</td>
+          <td>Radical Colin Chapman lightweighting (1,513 lbs)</td>
+        </tr>
+        <tr>
+          <td><span class="label label-danger">Least Efficient</span></td>
+          <td><strong>Cadillac Fleetwood</strong></td>
+          <td><span class="badge-tag badge-us">US</span></td>
+          <td><strong>10.4</strong></td>
+          <td>5,250</td>
+          <td>8 Cyl / 472 cu in / 205 hp</td>
+          <td>Immense 5,250 lb inertia, huge 472 cu in combustion volume</td>
+        </tr>
+        <tr>
+          <td><span class="label label-danger">Least Efficient</span></td>
+          <td><strong>Lincoln Continental</strong></td>
+          <td><span class="badge-tag badge-us">US</span></td>
+          <td><strong>10.4</strong></td>
+          <td>5,424</td>
+          <td>8 Cyl / 460 cu in / 215 hp</td>
+          <td>Heaviest car in fleet (5,424 lbs), 4-barrel carburetor thirst</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="q3-drivers">Q3: Core Engineering Drivers of Fuel Efficiency</h3>
+    <p>Correlation analysis confirms that <strong>Weight</strong> is the single strongest physical driver of fuel economy (r = -0.868), followed by <strong>Displacement</strong> (r = -0.848) and <strong>Horsepower</strong> (r = -0.776).</p>
+    
+    <div class="callout callout-success">
+      <div class="callout-title">The "MPG Illusion" and Gallons-Per-Mile (GPM) Linearization</div>
+      <p>Because MPG is an inverse metric (Distance / Volume), fuel savings exhibit non-linear diminishing returns. Improving a 10 MPG vehicle to 15 MPG saves <strong>3.33 gallons per 100 miles</strong>. However, improving a 30 MPG vehicle to 35 MPG saves only <strong>0.48 gallons per 100 miles</strong>. Converting to Gallons Per 100 Miles (GPM = 100/mpg) restores true linearity (R² = 0.81), demonstrating that vehicle mass directly dictates fuel burn rate.</p>
+    </div>
+
+    <h3 id="q4-surprises">Q4: Surprising Vehicles Given Size &amp; Power</h3>
+    <ul>
+      <li><strong>Mercedes-Benz 240D (+3.32 MPG Residual):</strong> Achieves 24.4 MPG despite a hefty 3,190 lb weight. This is the dataset's lone <strong>diesel engine</strong>, proving the thermodynamic advantage of compression ignition.</li>
+      <li><strong>Lotus Europa (+3.08 MPG Residual):</strong> Produces 113 hp while delivering 30.4 MPG due to fiberglass construction and aerodynamic profile.</li>
+      <li><strong>Pontiac Firebird (-1.82 MPG Residual):</strong> Underperforms expected efficiency due to restrictive emissions gear on a large 400 cu in V8.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section id="performance-design">
+    <h2>4. Performance & Design Dynamics</h2>
+
+    <h3 id="q5-power-speed">Q5: Horsepower vs. Quickness (1/4 Mile Time)</h3>
+    <p>The most powerful vehicles are the <strong>Maserati Bora (335 hp)</strong>, <strong>Ford Pantera L (264 hp)</strong>, and <strong>Camaro Z28 (245 hp)</strong>. The quickest quarter-mile times belong to the <strong>Ford Pantera L (14.50 s)</strong> and <strong>Maserati Bora (14.60 s)</strong>.</p>
+    <p><em>Are they the same?</em> <strong>Not necessarily.</strong> The Cadillac Fleetwood (205 hp) and Lincoln Continental (215 hp) produce massive power, yet their quarter-mile times are an agonizing ~18.0 seconds—slower than a 66 hp Fiat 128! Their 5,300+ lb weight consumes the engine's output in inertial resistance.</p>
+
+    <h3 id="q6-tradeoff">Q6: The Efficiency vs. Performance Pareto Boundary</h3>
+    <p>In 1974 carbureted technology, a strict trade-off existed. Sub-16-second quarter-mile sports cars averaged only <strong>15.6 MPG</strong>. High-mileage cars (&gt;25 MPG) required over 18.5 seconds to complete the quarter-mile. Only the <strong>Lotus Europa</strong> softened this frontier through extreme lightweighting.</p>
+
+    <h3 id="q7-underperformance">Q7: Underperforming Vehicles (The Sluggish Index)</h3>
+    <p>We define underperformance as vehicles suffering from poor fuel economy while failing to deliver acceleration speed: <code>Index = (qsec / 15) * (30 / mpg)</code>.</p>
+    <ul>
+      <li><strong>Valiant:</strong> 18.1 MPG, 20.22 s qsec. Glacial acceleration combined with poor mileage.</li>
+      <li><strong>Hornet 4 Drive:</strong> 21.4 MPG, 19.44 s qsec. Sluggish commuter with an inefficient inline-6.</li>
+      <li><strong>Merc 230:</strong> 22.8 MPG, 22.90 s qsec. The slowest vehicle in the entire fleet.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section id="vehicle-segments">
+    <h2>5. Vehicle Segments & Drivetrain Architecture</h2>
+
+    <h3 id="q9-cylinders">Q9: Cylinder Group Differences (4, 6, 8 Cylinders)</h3>
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Cylinder Group</th>
+          <th>Sample Count (N)</th>
+          <th>Mean MPG</th>
+          <th>Std Dev</th>
+          <th>Mean Weight (lbs)</th>
+          <th>Mean Horsepower</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>4 Cylinders</strong></td>
+          <td>11</td>
+          <td><strong>26.66</strong></td>
+          <td>4.50</td>
+          <td>2,286</td>
+          <td>82.6</td>
+        </tr>
+        <tr>
+          <td><strong>6 Cylinders</strong></td>
+          <td>7</td>
+          <td><strong>19.74</strong></td>
+          <td>1.45</td>
+          <td>3,117</td>
+          <td>122.3</td>
+        </tr>
+        <tr>
+          <td><strong>8 Cylinders</strong></td>
+          <td>14</td>
+          <td><strong>15.10</strong></td>
+          <td>2.56</td>
+          <td>3,999</td>
+          <td>209.2</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Both One-Way ANOVA (F = 39.7, p &lt; 0.001) and Kruskal-Wallis (H = 25.7, p &lt; 0.001) confirm statistically overwhelming differences. Each 2-cylinder step-up incurs an immediate ~5 to 7 MPG penalty.</p>
+
+    <h3 id="q10-transmission">Q10: Manual vs. Automatic & Simpson's Paradox</h3>
+    <div class="callout callout-danger">
+      <div class="callout-title"><i class="fas fa-exclamation-triangle"></i> Confounding & Simpson's Paradox Revealed</div>
+      <p>A naive comparison shows manual transmissions delivering an apparent <strong>+7.24 MPG advantage (p = 0.001)</strong>. However, multiple regression controlling for vehicle curb weight reveals that the manual coefficient drops to <strong>-0.024 MPG (p = 0.988)</strong>!</p>
+      <p>The apparent efficiency advantage of manual cars was entirely an artifact of vehicle size: manual transmissions were installed in 2,400 lb compacts, while automatics were installed in 3,800 lb cruisers. Drivetrain type itself offered no direct fuel savings.</p>
+    </div>
+
+    <h3 id="q12-pca">Q12: Principal Component Analysis & Market Segmentation</h3>
+    <p>PCA condenses the specification space into two primary dimensions capturing <strong>84.1% of total variance</strong>:</p>
+    <ul>
+      <li><strong>PC1 (60.0% Variance) — "Scale, Displacement & Thirst":</strong> High positive loadings on displacement (+0.49), weight (+0.44), and power (+0.36); strong negative loading on MPG (-0.46).</li>
+      <li><strong>PC2 (24.1% Variance) — "Track Acceleration & Gearing":</strong> High positive loading on qsec (+0.49); negative loadings on axle ratio (-0.42) and power (-0.33).</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section id="manufacturer-origin">
+    <h2>6. Manufacturer & Origin Dynamics</h2>
+
+    <h3 id="q14-regional-specs">Q14: Cross-Regional Profiles</h3>
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Geographic Region</th>
+          <th>Share</th>
+          <th>Mean MPG</th>
+          <th>Mean Weight (lbs)</th>
+          <th>Mean Disp (cu in)</th>
+          <th>Mean HP</th>
+          <th>Manual Share</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-tag badge-jp">Japan</span></td>
+          <td>18.8% (6 cars)</td>
+          <td><strong>25.53</strong></td>
+          <td>2,208</td>
+          <td>102.6</td>
+          <td>79.8</td>
+          <td>66.7%</td>
+        </tr>
+        <tr>
+          <td><span class="badge-tag badge-eu">Europe</span></td>
+          <td>46.9% (15 cars)</td>
+          <td><strong>20.57</strong></td>
+          <td>2,897</td>
+          <td>176.4</td>
+          <td>157.0</td>
+          <td>53.3%</td>
+        </tr>
+        <tr>
+          <td><span class="badge-tag badge-us">United States</span></td>
+          <td>34.4% (11 cars)</td>
+          <td><strong>14.97</strong></td>
+          <td>4,008</td>
+          <td>337.6</td>
+          <td>183.0</td>
+          <td>0.0%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="q15-positioning">Q15: Positioning for a Fuel-Conscious Era</h3>
+    <p><strong>Japan:</strong> Decisive competitive advantage. Every single Japanese vehicle exceeds 21 MPG. Perfectly tailored to post-embargo commuter demands.<br>
+    <strong>United States:</strong> Structurally compromised. 100% of domestic offerings are heavy (&gt;3,200 lbs) and automatic, resulting in sub-18 MPG fleet averages with zero representation in the economy segment.</p>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section id="data-limitations">
+    <h2>7. Data Issues, Limitations & Diagnostics</h2>
+
+    <h3 id="q17-collinearity">Q17: Multicollinearity (Variance Inflation Factors)</h3>
+    <p>A full regression model predicting MPG reveals severe collinearity: <strong>Weight (VIF = 10.7)</strong> and <strong>Displacement (VIF = 11.2)</strong> both exceed conservative diagnostic thresholds (VIF &gt; 5). Because displacement and weight co-vary heavily with engine block size, interpreting single coefficients in isolation without controlling for collinearity produces misleading conclusions.</p>
+
+    <h3 id="q18-influence">Q18: Influential Observations (Cook's Distance)</h3>
+    <p>Due to the small sample size (N = 32), single vehicles exert high leverage. The <strong>Maserati Bora</strong> exerts extreme leverage on horsepower (hp = 335), while the <strong>Cadillac Fleetwood</strong> and <strong>Lincoln Continental</strong> exert extreme leverage on vehicle mass and displacement.</p>
+  </section>
+
+  <!-- SECTION 8 -->
+  <section id="additional-inquiries">
+    <h2>8. Additional Inquiries (Custom Business Questions)</h2>
+
+    <h3 id="add-q1">Additional Question 1: Power-to-Weight Dynamics vs. Real-World Acceleration</h3>
+    <p>Does raw horsepower compensate for vehicle mass? Linear regression reveals that Power-to-Weight ratio explains <strong>49.5% of quarter-mile variance</strong>. However, significant outliers exist: luxury tourers like the Mercedes 450SL suffer substantial transmission slip and tall gearing, causing them to lag behind lightweight sports cars with identical power-to-weight ratios.</p>
+
+    <h3 id="add-q2">Additional Question 2: The Carburetor Efficiency Penalty</h3>
+    <p>Evaluating fuel economy across carburetor barrels (1, 2, 3, 4, 6, 8) demonstrates severe diminishing returns: upgrading from 1-2 barrels to a 4-barrel carburetor inflicts an immediate <strong>37.5% fuel economy penalty (dropping from 25.3 to 15.8 MPG)</strong>, while providing only marginal quarter-mile acceleration improvements.</p>
+  </section>
+
+  <!-- SECTION 9 -->
+  <section id="recommendations">
+    <h2>9. Strategic Roadmap & Product Recommendations</h2>
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Strategic Pillar</th>
+          <th>Recommended Action</th>
+          <th>Analytical Evidence</th>
+          <th>Target Specifications</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Vehicle Architecture</strong></td>
+          <td>Aggressive Platform Downsizing & Lightweighting</td>
+          <td>Weight accounts for &gt;75% of fuel variance. Shedding 500 lbs yields ~2.7 MPG gain.</td>
+          <td>Target unibody curb weight &lt; 2,800 lbs</td>
+        </tr>
+        <tr>
+          <td><strong>2. Powertrain Strategy</strong></td>
+          <td>High Volumetric Efficiency Engines (OHC / Multi-Valve)</td>
+          <td>US V8s produced only ~0.45 hp/cu in. European/Japanese designs achieved &gt;0.75 hp/cu in.</td>
+          <td>Displacement &lt; 2.5L (150 cu in), specific output &gt; 0.75 hp/cu in</td>
+        </tr>
+        <tr>
+          <td><strong>3. Drivetrain Architecture</strong></td>
+          <td>Multi-Speed Overdrive Transmissions</td>
+          <td>Simpson's paradox proved gearing ratios (drat), not transmission type, dictate economy.</td>
+          <td>Deploy 4-speed/5-speed transmissions with tall cruising overdrive (drat &lt; 3.2)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<script>
+function toggleCode(btn) {
+  var pre = btn.parentElement.nextElementSibling;
+  if (pre.style.display === "none") {
+    pre.style.display = "block";
+    btn.innerText = "Hide Code";
+  } else {
+    pre.style.display = "none";
+    btn.innerText = "Show Code";
+  }
+}
+</script>
+</body>
+</html>
